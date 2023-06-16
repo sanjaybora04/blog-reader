@@ -1,0 +1,25 @@
+{
+  "name": "page-reader",
+  "version": "1.0.0",
+  "description": "This component provides you a widgit that allows you to listen to your page content. It is most suitable for blogs and articles. You can play/pause, stop, play-next, play-previous, set speed/voice using the widgit.",
+  "main": "dist/page-reader.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanjaybora04/page-reader.git"
+  },
+  "keywords": [
+    "page reader",
+    "blog reader",
+    "read aloud",
+    "read"
+  ],
+  "author": "Sanjay Bora",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sanjaybora04/page-reader/issues"
+  },
+  "homepage": "https://github.com/sanjaybora04/page-reader#readme"
+}
