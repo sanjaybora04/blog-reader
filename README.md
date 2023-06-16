@@ -1,1 +1,1 @@
-# react-page-reader
+# blog-reader
