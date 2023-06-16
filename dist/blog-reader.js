@@ -1,4 +1,4 @@
-class PageReader extends HTMLElement {
+class BlogReader extends HTMLElement {
   constructor() {
     super();
     const shadow = this.attachShadow({ mode: 'open' });
@@ -930,4 +930,4 @@ video {
   }
 }
 
-customElements.define('page-reader', PageReader);
+customElements.define('blog-reader', BlogReader);

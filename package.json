@@ -1,8 +1,8 @@
 {
-  "name": "page-reader",
+  "name": "blog-reader",
   "version": "1.0.0",
   "description": "This component provides you a widgit that allows you to listen to your page content. It is most suitable for blogs and articles. You can play/pause, stop, play-next, play-previous, set speed/voice using the widgit.",
-  "main": "dist/page-reader.js",
+  "main": "dist/blog-reader.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
