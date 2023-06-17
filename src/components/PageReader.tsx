@@ -1,34 +1,34 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../index.css";
 
 export const PageReader = () => {
     const utterance = new SpeechSynthesisUtterance();
     const [options, setOptions] = useState(false) // toggle options menu
-    const [speed, setSpeed] = useState(1)
-    const [voice, setVoice] = useState(0) // selected voice
-    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]) // All voices
 
-    let lines: NodeListOf<HTMLDivElement> // All lines
+    let lines: NodeListOf<HTMLDivElement> = document.querySelectorAll("#content p, #content h1, #content h2, #content h3, #content h4, #content h5, #content h6, #content h7"); // All lines
     let playing = false // playing or paused
     let index = 0 // current line
     let position = 0 // position in current line
 
-    const changeSpeed = (e:ChangeEvent<HTMLSelectElement>) => {
-        setSpeed(parseFloat(e.target.value))
-        update()
-    }
-    const changeVoice = (e:ChangeEvent<HTMLSelectElement>) => {
-        setVoice(parseFloat(e.target.value))
-        update()
+    function populateVoices() {
+        const voices = speechSynthesis.getVoices();
+        const voicesSelect = document.getElementById('voices');
+        if (voicesSelect) {
+            voicesSelect.innerHTML = "";
+
+            voices.forEach(function (voice, index) {
+                const option = document.createElement('option');
+                option.value = index.toString();
+                option.textContent = voice.name;
+                voicesSelect.appendChild(option);
+            });
+        }
     }
 
-    function populateVoices() {
-        setVoices(speechSynthesis.getVoices());
-    }
     function speakLine() {
         const currentLine = lines[index];
         const text = currentLine.textContent;
-        if(text==null){
+        if (text == null) {
             return
         }
         utterance.text = text.substring(position);
@@ -40,6 +40,11 @@ export const PageReader = () => {
                 speakLine();
                 update();
             }
+            else {
+                index = 0
+                position = 0
+                stop()
+            }
         };
     }
 
@@ -47,6 +52,15 @@ export const PageReader = () => {
         playing = !playing
         document.getElementById('controls')?.classList.toggle('playing')
         if (playing) {
+            const voices = speechSynthesis.getVoices();
+            const voiceElement = document.getElementById('voices');
+            const speedElement = document.getElementById('speed');
+            const voice = voiceElement instanceof HTMLSelectElement ? parseFloat(voiceElement.value) : undefined;
+            const speed = speedElement instanceof HTMLSelectElement ? parseFloat(speedElement.value) : undefined;
+            if (voice == undefined || speed == undefined) {
+                alert(voice)
+                return
+            }
             utterance.voice = voices[voice];
             utterance.rate = speed;
             document.getElementById('controls')?.classList.add("fixed", "bottom-2", "right-1/2", "translate-x-1/2");
@@ -57,26 +71,7 @@ export const PageReader = () => {
             speechSynthesis.cancel();
         }
     }
-    
-    function update() {
-        const currentLine = lines[index];
-        for (let i = 0; i < lines.length; i++) {
-            lines[i].classList.remove("bg-sky-200");
-        }
-        currentLine.classList.add("bg-sky-200");
 
-        window.scrollTo({
-            top: currentLine.offsetTop - 200,
-            behavior: 'smooth'
-        });
-
-        if (speechSynthesis.speaking) {
-            speechSynthesis.cancel();
-            speakLine();
-        } else {
-            speechSynthesis.cancel();
-        }
-    }
 
     function stop() {
         speechSynthesis.cancel();
@@ -106,6 +101,26 @@ export const PageReader = () => {
         }
     }
 
+    function update() {
+        const currentLine = lines[index];
+        for (let i = 0; i < lines.length; i++) {
+            lines[i].classList.remove("bg-sky-200");
+        }
+        currentLine.classList.add("bg-sky-200");
+
+        window.scrollTo({
+            top: currentLine.offsetTop - 200,
+            behavior: 'smooth'
+        });
+
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            speakLine();
+        } else {
+            speechSynthesis.cancel();
+        }
+    }
+
     useEffect(() => {
         lines = document.querySelectorAll("#content p, #content h1, #content h2, #content h3, #content h4, #content h5, #content h6, #content h7");
 
@@ -113,18 +128,40 @@ export const PageReader = () => {
             position = e.charIndex;
         });
 
-        function handleClick(e:Event) {
+
+        function handleClick(e: Event) {
             const target = e.target
-            if(target instanceof Element){
+            if (target instanceof Element) {
                 if (!target.closest('#toggleoptions, #options')) {
                     setOptions(false)
                 }
             }
         }
 
-        document.addEventListener('click', handleClick);
+        function handleSpeedChange(e: Event) {
+            const target = e.target
+            if (target instanceof HTMLSelectElement) {
+                const speed = parseFloat(target.value);
+                utterance.rate = speed;
+                update();
+            }
+        }
 
-        function handleKeyDown(e:KeyboardEvent) {
+        document.getElementById('speed')?.addEventListener('change', handleSpeedChange);
+
+        function handleVoicesChange(e: Event) {
+            const target = e.target
+            if (target instanceof HTMLSelectElement) {
+                const voice = parseFloat(target.value);
+                const voices = speechSynthesis.getVoices();
+                utterance.voice = voices[voice];
+                update();
+            }
+        }
+
+        document.getElementById('voices')?.addEventListener('change', handleVoicesChange);
+
+        function handleKeyDown(e: KeyboardEvent) {
             e.preventDefault();
             if (e.which === 32 || e.which === 179) {
                 play();
@@ -135,26 +172,29 @@ export const PageReader = () => {
             }
         }
 
+        speechSynthesis.onvoiceschanged = (): void => {
+            populateVoices();
+        };
+
+        document.addEventListener('click', handleClick);
         document.addEventListener('keydown', handleKeyDown);
 
-
-        function initialize() {
-            populateVoices();
-        }
-
-
-        if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
-            initialize();
-        } else {
-            alert('Text-to-speech is not supported in this browser.');
-        }
-
-
         return () => {
+            utterance.removeEventListener('boundary', function (e) {
+                position = e.charIndex;
+            });
             document.removeEventListener('click', handleClick);
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
+
+    useEffect(() => {
+        if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
+            populateVoices()
+        } else {
+            alert('Text-to-speech is not supported in this browser.');
+        }
+    }, [])
 
     return (
         <div>
@@ -194,19 +234,17 @@ export const PageReader = () => {
                 className={"fixed top-80 left-1/2 -translate-x-1/2 flex-wrap bg-gray-800 text-white rounded-lg shadow-2xl shadow-black p-3 " + (options ? "" : "hidden")}>
                 <div className="p-2">
                     <label htmlFor="speed">Speed:</label>
-                    <select id="speed" value={speed} onChange={changeSpeed} className="bg-gray-700 focus:outline-none">
-                        <option value={0.5}>0.5x</option>
-                        <option value={1} selected>1x</option>
-                        <option value={1.5}>1.5x</option>
-                        <option value={2}>2x</option>
+                    <select id="speed" className="bg-gray-700 focus:outline-none">
+                        <option value='0.5'>0.5x</option>
+                        <option value='1' selected>1x</option>
+                        <option value='1.5'>1.5x</option>
+                        <option value='2'>2x</option>
                     </select>
                 </div>
 
                 <div className="p-2">
                     <label htmlFor="voices">Voices:</label>
-                    <select id="voices" value={voice} onChange={changeVoice} className="bg-gray-700 focus:outline-none">
-                        {voices.map((voice, index) => (<option value={index}>{voice.name}</option>))}
-                    </select>
+                    <select id="voices" className="bg-gray-700 focus:outline-none"></select>
                 </div>
             </div>
         </div>

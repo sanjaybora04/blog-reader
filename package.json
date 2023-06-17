@@ -1,11 +1,12 @@
 {
   "name": "react-page-reader",
   "private": false,
-  "version": "0.0.0",
+  "version": "0.0.2",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "repository": "git@github.com:sanjaybora04/react-page-reader.git",
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
@@ -20,7 +21,7 @@
     "access": "public"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite -- --host",
     "build": "tsc && vite build",
     "prepare": "npm run build",
     "preview": "vite preview"
