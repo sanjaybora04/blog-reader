@@ -1,44 +1,45 @@
 {
   "name": "react-page-reader",
   "private": false,
-  "version": "0.0.2",
-  "type": "module",
-  "main": "dist/index.umd.js",
-  "module": "dist/index.es.js",
-  "types": "dist/index.d.ts",
+  "version": "0.0.5",
   "repository": "git@github.com:sanjaybora04/react-page-reader.git",
-  "exports": {
-    ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "files": [
-    "/dist"
-  ],
+  "author": "Sanjay Bora",
+  "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "dev": "vite -- --host",
-    "build": "tsc && vite build",
-    "prepare": "npm run build",
+    "dev": "vite",
+    "build": "rollup -c --bundleConfigAsCjs",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tailwindcss": "^3.2.4"
-  },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.1",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-typescript": "^11.1.1",
     "@types/react": "^18.0.26",
     "@types/react-dom": "^18.0.9",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "autoprefixer": "^10.4.13",
+    "path": "^0.12.7",
     "postcss": "^8.4.20",
+    "rollup": "^3.25.1",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "tailwindcss": "^3.2.4",
+    "tslib": "^2.5.3",
     "typescript": "^4.9.3",
     "vite": "^4.0.0",
     "vite-plugin-dts": "^1.7.1"
-  }
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts"
 }

@@ -1,1 +1,1 @@
-export { PageReader } from "./src/components/PageReader";
+export {PageReader} from './src/components/PageReader'
