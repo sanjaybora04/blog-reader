@@ -25,12 +25,17 @@ export default [
       resolve(),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
-      postcss(), 
+      postcss({
+        inject:{
+          insertAt: 'top'
+        },
+        minimize: true
+      }), 
     ],
     external: ["react", "react-dom"],
   },
   {
-    input: "dist/esm/types/index.d.ts",
+    input: "dist/esm/types/src/index.d.ts",
     output: [{ file: "dist/index.d.ts", format: "esm" }],
     plugins: [dts.default()],
     external: [/\.css$/],
