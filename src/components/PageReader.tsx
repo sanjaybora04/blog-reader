@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -14,6 +15,7 @@ const ControlsContainer = styled.div`
   font-size: 1rem;
   border-radius: 0.5rem;
   padding: 0.75rem;
+  z-index: 999999;
 `;
 
 const Button = styled.button`
@@ -56,7 +58,7 @@ cursor: pointer;
 `;
 
 export const PageReader = () => {
-    const utterance = new SpeechSynthesisUtterance();
+    const utterance = new window.SpeechSynthesisUtterance();
     const [options, setOptions] = useState(false) // toggle options menu
 
     let lines: NodeListOf<HTMLDivElement> = document.querySelectorAll("#content p, #content h1, #content h2, #content h3, #content h4, #content h5, #content h6, #content h7, #content ul, #content ol, #content li"); // All lines
