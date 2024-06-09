@@ -1,7 +1,3 @@
-Certainly! Here's the updated README with the demo link included at the top:
-
----
-
 # react-page-reader
 
 [Live Demo](https://sanjaybora.vercel.app/blog/react-page-reader)

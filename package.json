@@ -1,7 +1,17 @@
 {
   "name": "react-page-reader",
   "private": false,
-  "version": "1.1.2",
+  "version": "1.1.4",
+  "description": "A React component for adding text-to-speech functionality to your web applications.",
+  "keywords": [
+    "react blog reader",
+    "accessibility",
+    "text-to-speech",
+    "npm",
+    "web development",
+    "react article reader",
+    "javascript speech syntheses"
+  ],
   "repository": "git@github.com:sanjaybora04/react-page-reader.git",
   "author": "Sanjay Bora",
   "license": "MIT",
