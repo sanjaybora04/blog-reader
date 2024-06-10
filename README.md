@@ -2,7 +2,7 @@
 
 [Live Demo](https://sanjaybora.vercel.app/blog/react-page-reader)
 
-`react-page-reader` is a React component that reads the text content of elements inside a container with a specified ID. It currently supports reading paragraph (`<p>`), heading (`<h1>`, `<h2>`, etc.), and list (`<ul>`, `<ol>`, `<li>`) tags within the container.
+`react-page-reader` is a React component that reads the text content of elements inside the container with id `#content`. It currently supports reading paragraph (`<p>`) and heading (`<h1>`, `<h2>`, `<h3>`, `<h4>` etc.) tags within the container.
 
 ![react-page-reader](https://raw.githubusercontent.com/sanjaybora04/react-page-reader/main/react-page-reader-thumbnail.jpg)
 
@@ -87,5 +87,9 @@ export default Page;
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/sanjaybora04/react-page-reader/blob/main/LICENSE) file for details.
+
+## Support
+
+If you find this package helpful, please consider [supporting my work](https://www.paypal.com/paypalme/sanjaybora04). Your support is greatly appreciated and helps me continue to improve this project.
 
 ---

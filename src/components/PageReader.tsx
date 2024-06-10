@@ -33,7 +33,7 @@ const SvgIcon = styled.svg`
     fill: currentColor;
     `;
 
-const OptionsContainer = styled.div<{show:Boolean}>`
+const OptionsContainer = styled.div<{ show: Boolean }>`
 position: fixed;
 top: 10rem;
 left: 50%;
@@ -58,10 +58,11 @@ cursor: pointer;
 `;
 
 export const PageReader = () => {
+    const allowedtags = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7']
+    let lines: NodeListOf<HTMLDivElement>;
     const utterance = new window.SpeechSynthesisUtterance();
     const [options, setOptions] = useState(false) // toggle options menu
 
-    let lines: NodeListOf<HTMLDivElement> = document.querySelectorAll("#content p, #content h1, #content h2, #content h3, #content h4, #content h5, #content h6, #content h7, #content ul, #content ol, #content li"); // All lines
     let playing = false // playing or paused
     let index = 0 // current line
     let position = 0 // position in current line
@@ -145,6 +146,10 @@ export const PageReader = () => {
         document.getElementById('page-reader-controls')?.style.setProperty('transform', 'none', 'important')
 
         document.getElementById('page-reader-stop')?.style.setProperty('display', 'none', 'important')
+
+        document.getElementById('page-reader-play')?.style.setProperty('display', 'inline', 'important')
+        document.getElementById('page-reader-pause')?.style.setProperty('display', 'none', 'important')
+        
         index = 0
         position = 0
     }
@@ -186,7 +191,11 @@ export const PageReader = () => {
     }
 
     useEffect(() => {
-        lines = document.querySelectorAll("#content p, #content h1, #content h2, #content h3, #content h4, #content h5, #content h6, #content h7");
+        // Constructing selector to exclude tags whose parent is already in allowedtags
+        const selector = allowedtags.map(tag => `#content ${tag}:not(${allowedtags.map(parent => `${parent} ${tag}`).join(', ')})`).join(', ');
+
+        // Select elements using the constructed selector
+        lines = document.querySelectorAll(selector);
 
         utterance.addEventListener('boundary', function (e) {
             position = e.charIndex;
@@ -227,7 +236,6 @@ export const PageReader = () => {
         // Keyboard and media button events
         function handleKeyDown(e: KeyboardEvent) {
             e.preventDefault();
-            console.log(e.key, e.which)
             if (e.code === 'Space' || e.key === 'MediaPlayPause') {             // space and play button
                 play();
             } else if (e.key === 'ArrowRight' || e.key === 'MediaTrackNext') {      // right arrow key and next button
@@ -302,7 +310,7 @@ export const PageReader = () => {
             </ControlsContainer>
 
             <OptionsContainer id="page-reader-options" show={options}>
-                <div style={{'padding':'0.5rem'}}>
+                <div style={{ 'padding': '0.5rem' }}>
                     <label htmlFor="page-reader-speed">Speed:</label>
                     <Select id="page-reader-speed" defaultValue="1">
                         <option value='0.5'>0.5x</option>
@@ -312,7 +320,7 @@ export const PageReader = () => {
                     </Select>
                 </div>
 
-                <div style={{'padding':'0.5rem'}}>
+                <div style={{ 'padding': '0.5rem' }}>
                     <label htmlFor="page-reader-voices">Voices:</label>
                     <Select id="page-reader-voices" className="bg-gray-700 focus:outline-none"></Select>
                 </div>
